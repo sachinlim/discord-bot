@@ -3,6 +3,7 @@ from discord.ext import commands
 import random
 import datetime
 import passives
+import actives
 import in_game_scraper
 
 intents = discord.Intents.default()
@@ -16,7 +17,7 @@ async def on_ready():
     print("Bot is working!")
 
 
-# Shortens weblinks from eBay and Amazon before deleting the long link
+# Shortens website links from eBay and Amazon before deleting the long link
 @bot.listen("on_message")
 async def on_message(message):
     # Shortens eBay links
@@ -57,24 +58,19 @@ async def lolrole(ctx):
 # op.gg profile for summoner name entered after command
 @bot.command()
 async def op(ctx, *, summoner_name):
-    if " " in summoner_name:
-        formatted = summoner_name.replace(" ", "%20")
-        await ctx.send("https://www.op.gg/summoners/euw/" + formatted)
-    else:
-        await ctx.send("https://www.op.gg/summoners/euw/" + summoner_name)
+    formatted = passives.op_format(summoner_name)
+    await ctx.send("https://www.op.gg/summoners/euw/" + formatted)
 
 
 # Link to live game for summoner name entered after command
 @bot.command()
-async def ig2(ctx, *, summoner_name):
-    formatted = summoner_name
-    if " " in summoner_name:
-        formatted = summoner_name.replace(" ", "%20")
+async def ig(ctx, *, summoner_name):
+    formatted = passives.op_format(summoner_name)
 
     embed = discord.Embed(
-        title = "Live Game Match-Up",
-        description = f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
-        colour = 0xbc8125
+        title= "Live Game Match-Up",
+        description= f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
+        colour= 0xbc8125
     )
 
     blue_side, red_side = in_game_scraper.return_lists()
@@ -92,24 +88,26 @@ async def ig2(ctx, *, summoner_name):
         red_ranks += items[1] + '\n'
         red_wr += items[2] + '\n'
 
-    embed.add_field(name = "Blue Team", value = blue_champs, inline = True)
-    embed.add_field(name = "Rank", value = blue_ranks, inline = True)
-    embed.add_field(name = "Win Rate", value = blue_wr, inline = True)
+    embed.add_field(name= "Blue Team", value= blue_champs, inline= True)
+    embed.add_field(name= "Rank", value= blue_ranks, inline= True)
+    embed.add_field(name= "Win Rate", value= blue_wr, inline= True)
 
-    embed.add_field(name = "Red Team", value = red_champs, inline = True)
-    embed.add_field(name = "Rank", value = red_ranks, inline = True)
-    embed.add_field(name = "Win Rate", value = red_wr, inline = True)
+    embed.add_field(name= "Red Team", value= red_champs, inline= True)
+    embed.add_field(name= "Rank", value= red_ranks, inline= True)
+    embed.add_field(name= "Win Rate", value= red_wr, inline= True)
 
-    embed.set_thumbnail(url= 'https://static.wikia.nocookie.net/leagueoflegends/images/0/02/Season_2022_-_Challenger.png')
+    embed.set_thumbnail(url= 'https://static.wikia.nocookie.net/leagueoflegends/images/0/02/Season_2022_-_Challenger'
+                             '.png')
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text= '\u200b',
-                     icon_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/1200px-LoL_icon.svg.png')
+                     icon_url= 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/1200px'
+                               '-LoL_icon.svg.png')
 
     await ctx.send(embed = embed)
 
 
 @bot.command()
-async def ig(ctx, *, summoner_name):
+async def ig2(ctx, *, summoner_name):
     if " " in summoner_name:
         formatted = summoner_name.replace(" ", "%20")
         await ctx.send("https://www.op.gg/summoners/euw/" + formatted + "/ingame")
@@ -137,4 +135,4 @@ async def ugg(ctx, *, champion_name):
         await ctx.send("https://u.gg/lol/champions/" + champion_name + "/build")
 
 
-bot.run(passives.token)
+bot.run(actives.token)
