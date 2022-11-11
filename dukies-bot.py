@@ -62,54 +62,8 @@ async def op(ctx, *, summoner_name):
     await ctx.send("https://www.op.gg/summoners/euw/" + formatted)
 
 
-# Link to live game for summoner name entered after command
 @bot.command()
 async def ig(ctx, *, summoner_name):
-    formatted = passives.op_format(summoner_name)
-
-    embed = discord.Embed(
-        title= "Live Game Match-Up",
-        description= f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
-        colour= 0xbc8125
-    )
-
-    blue_champs = blue_ranks = blue_wr = ""
-    red_champs = red_ranks = red_wr = ""
-
-    data = in_game_scraper.get_data(formatted)
-
-    for summoner_name in data[0:5]:
-        blue_champs += summoner_name[0] + '\n'
-        blue_ranks += summoner_name[1] + '\n'
-        blue_wr += summoner_name[2] + '\n'
-
-    embed.add_field(name= "Blue Team", value= blue_champs, inline= True)
-    embed.add_field(name= "Rank", value= blue_ranks, inline= True)
-    embed.add_field(name= "Win Rate", value= blue_wr, inline= True)
-
-    for summoner_name in data[5:10]:
-        red_champs += summoner_name[0] + '\n'
-        red_ranks += summoner_name[1] + '\n'
-        red_wr += summoner_name[2] + '\n'
-
-    embed.add_field(name="Red Team", value=red_champs, inline=True)
-    embed.add_field(name="Rank", value=red_ranks, inline=True)
-    embed.add_field(name="Win Rate", value=red_wr, inline=True)
-
-
-    # finalise thumbnail icon
-    embed.set_thumbnail(url= 'https://static.wikia.nocookie.net/leagueoflegends/images/0/02/Season_2022_-_Challenger'
-                             '.png')
-    embed.timestamp = datetime.datetime.utcnow()
-    embed.set_footer(text= '\u200b',
-                     icon_url= 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/1200px'
-                               '-LoL_icon.svg.png')
-
-    await ctx.send(embed = embed)
-
-
-@bot.command()
-async def ig2(ctx, *, summoner_name):
     if " " in summoner_name:
         formatted = summoner_name.replace(" ", "%20")
         await ctx.send("https://www.op.gg/summoners/euw/" + formatted + "/ingame")
