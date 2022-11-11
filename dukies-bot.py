@@ -119,22 +119,15 @@ async def ig2(ctx, *, summoner_name):
 # Pro Builds for specified Champion
 @bot.command()
 async def pb(ctx, *, champion_name):
-    if " " in champion_name:
-        formatted = champion_name.replace(" ", "")
-        await ctx.send("https://probuildstats.com/champion/" + formatted)
-    else:
-        await ctx.send("https://probuildstats.com/champion/" + champion_name)
+    formatted = passives.ugg_format(champion_name)
+    await ctx.send("https://probuildstats.com/champion/" + formatted)
 
 
 # u.gg build guide for specified Champion
 @bot.command()
-async def ugg(ctx, *, champion_name):
-    # create a function to format this in passives.py
-    if " " in champion_name:
-        formatted = champion_name.replace(" ", "")
-        await ctx.send("https://u.gg/lol/champions/" + formatted + "/build")
-    else:
-        await ctx.send("https://u.gg/lol/champions/" + champion_name + "/build")
+async def ug(ctx, *, champion_name):
+    formatted = passives.ugg_format(champion_name)
+    await ctx.send("https://u.gg/lol/champions/" + formatted + "/build")
 
 
 bot.run(actives.token)
