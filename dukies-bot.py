@@ -128,6 +128,7 @@ async def pb(ctx, *, champion_name):
 # u.gg build guide for specified Champion
 @bot.command()
 async def ugg(ctx, *, champion_name):
+    # create a function to format this
     if " " in champion_name:
         formatted = champion_name.replace(" ", "")
         await ctx.send("https://u.gg/lol/champions/" + formatted + "/build")
