@@ -96,6 +96,7 @@ async def ig(ctx, *, summoner_name):
     embed.add_field(name= "Rank", value= red_ranks, inline= True)
     embed.add_field(name= "Win Rate", value= red_wr, inline= True)
 
+    # finalise thumbnail icon
     embed.set_thumbnail(url= 'https://static.wikia.nocookie.net/leagueoflegends/images/0/02/Season_2022_-_Challenger'
                              '.png')
     embed.timestamp = datetime.datetime.utcnow()
