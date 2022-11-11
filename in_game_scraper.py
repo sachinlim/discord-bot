@@ -5,8 +5,7 @@ from selenium.webdriver.common.by import By
 def get_data(summoner_name):
     url = f'https://www.op.gg/summoners/euw/{summoner_name}/ingame'
 
-    # path = 'chromedriver'
-    path = '/usr/local/bin/chromedriver'
+    path = 'chromedriver'
     driver = webdriver.Chrome(path)
     driver.get(url)
 
