@@ -129,4 +129,7 @@ async def ug(ctx, *, champion_name):
     await ctx.send("https://u.gg/lol/champions/" + formatted + "/build")
 
 
+# patch notes
+
+
 bot.run(actives.token)
