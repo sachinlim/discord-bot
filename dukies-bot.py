@@ -130,6 +130,9 @@ async def ug(ctx, *, champion_name):
 
 
 # patch notes
+@bot.command()
+async def patch(ctx):
+    await ctx.send('https://www.leagueoflegends.com/en-us/news/tags/patch-notes/')
 
 
 bot.run(actives.token)
