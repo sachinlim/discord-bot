@@ -17,6 +17,12 @@ async def on_ready():
     print("Bot is working!")
 
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Please enter the search term!')
+
+
 # Shortens website links from eBay and Amazon before deleting the long link
 @bot.listen("on_message")
 async def on_message(message):
@@ -131,7 +137,7 @@ async def ug(ctx, *, champion_name):
 
 # patch notes
 @bot.command()
-async def patch(ctx, game):
+async def patch(ctx, *, game):
     match game:
         case 'lol':
             await ctx.send('https://www.leagueoflegends.com/en-us/news/tags/patch-notes/')
