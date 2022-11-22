@@ -149,4 +149,10 @@ async def patch(ctx, *, game):
             await ctx.send('Please enter a valid game after !patch. The supported games are: lol, tft, valo')
 
 
+# command to delete previous messages
+@bot.command()
+async def clear(ctx, amount=1):
+    await ctx.channel.purge(limit=amount + 1)
+
+
 bot.run(actives.token)
