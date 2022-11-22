@@ -68,9 +68,9 @@ async def ig(ctx, *, summoner_name):
     formatted = passives.op_format(summoner_name)
 
     embed = discord.Embed(
-        title= "Live Game Match-Up",
-        description= f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
-        colour= 0xbc8125
+        title="Live Game Match-Up",
+        description=f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
+        colour=0xbc8125
     )
 
     blue_champs = blue_ranks = blue_wr = ""
@@ -83,9 +83,9 @@ async def ig(ctx, *, summoner_name):
         blue_ranks += summoner_name[1] + '\n'
         blue_wr += summoner_name[2] + '\n'
 
-    embed.add_field(name= "Blue Team", value= blue_champs, inline= True)
-    embed.add_field(name= "Rank", value= blue_ranks, inline= True)
-    embed.add_field(name= "Win Rate", value= blue_wr, inline= True)
+    embed.add_field(name="Blue Team", value=blue_champs, inline=True)
+    embed.add_field(name="Rank", value=blue_ranks, inline=True)
+    embed.add_field(name="Win Rate", value=blue_wr, inline=True)
 
     for summoner_name in data[5:10]:
         red_champs += summoner_name[0] + '\n'
@@ -96,14 +96,14 @@ async def ig(ctx, *, summoner_name):
     embed.add_field(name="Rank", value=red_ranks, inline=True)
     embed.add_field(name="Win Rate", value=red_wr, inline=True)
 
-    embed.set_thumbnail(url= 'https://static.wikia.nocookie.net/leagueoflegends/images/0/02/Season_2022_-_Challenger'
-                             '.png')
+    embed.set_thumbnail(url='https://static.wikia.nocookie.net/leagueoflegends/images/0/02/Season_2022_-_Challenger'
+                            '.png')
     embed.timestamp = datetime.datetime.utcnow()
-    embed.set_footer(text= '\u200b',
-                     icon_url= 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/1200px'
-                               '-LoL_icon.svg.png')
+    embed.set_footer(text='\u200b',
+                     icon_url='https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/LoL_icon.svg/1200px'
+                              '-LoL_icon.svg.png')
 
-    await ctx.send(embed = embed)
+    await ctx.send(embed=embed)
 
 
 @bot.command()
@@ -131,8 +131,18 @@ async def ug(ctx, *, champion_name):
 
 # patch notes
 @bot.command()
-async def patch(ctx):
+async def lolpatch(ctx):
     await ctx.send('https://www.leagueoflegends.com/en-us/news/tags/patch-notes/')
+
+
+@bot.command()
+async def tftpatch(ctx):
+    await ctx.send('https://teamfighttactics.leagueoflegends.com/en-us/news/')
+
+
+@bot.command()
+async def valopatch(ctx):
+    await ctx.send('https://playvalorant.com/en-us/news/game-updates/')
 
 
 bot.run(actives.token)
