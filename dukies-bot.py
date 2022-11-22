@@ -131,18 +131,16 @@ async def ug(ctx, *, champion_name):
 
 # patch notes
 @bot.command()
-async def lolpatch(ctx):
-    await ctx.send('https://www.leagueoflegends.com/en-us/news/tags/patch-notes/')
-
-
-@bot.command()
-async def tftpatch(ctx):
-    await ctx.send('https://teamfighttactics.leagueoflegends.com/en-us/news/')
-
-
-@bot.command()
-async def valopatch(ctx):
-    await ctx.send('https://playvalorant.com/en-us/news/game-updates/')
+async def patch(ctx, game):
+    match game:
+        case 'lol':
+            await ctx.send('https://www.leagueoflegends.com/en-us/news/tags/patch-notes/')
+        case 'tft':
+            await ctx.send('https://teamfighttactics.leagueoflegends.com/en-us/news/')
+        case 'valo':
+            await ctx.send('https://playvalorant.com/en-us/news/game-updates/')
+        case _:
+            await ctx.send('Please enter a valid game after !patch. The supported games are: lol, tft, valo')
 
 
 bot.run(actives.token)
