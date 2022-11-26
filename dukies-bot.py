@@ -156,6 +156,7 @@ async def clear(ctx, amount=1):
     await ctx.channel.purge(limit=amount + 1)
 
 
+# command to search for sold items on eBay to get an idea of its market value
 @bot.command()
 async def ebay(ctx, *, item):
     formatted_search_term = item
@@ -164,22 +165,29 @@ async def ebay(ctx, *, item):
 
     soup = ebay_scraper.website_data(formatted_search_term)
     my_list = ebay_scraper.get_data(soup)
+
     mean, median, mode = ebay_scraper.calculate_averages(my_list)
+    minimum_value = min(my_list)
+    maximum_value = max(my_list)
 
     embed = discord.Embed(
         title='eBay Sold Items Search',
         description='Filters: **Exact words**, **Sold listings**, **Used**, **UK only** \n'
-                    'The values below may not reflect all of the items in the market due to the filers being used in '
-                    '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch) and the link used \n',
+                    'The values below may not reflect all of the sold items due to the link and filers being used in '
+                    '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch). Separate accessories sold may '
+                    'be included in the search!',
         colour=0x6b9312,
     )
 
     embed.add_field(name="Average", value=f'£{mean:.2f}', inline=False)
-    embed.add_field(name="Median", value=f'£{median:.2f}', inline=False)
-    embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=False)
+    embed.add_field(name="Median", value=f'£{median:.2f}', inline=True)
+    embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=True)
+    embed.add_field(name="Range", value=f'£{minimum_value:.2f} to £{maximum_value:.2f}', inline=True)
 
-    embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-EBay_logo.svg.png')
-    embed.set_footer(text=f'There are a total of {len(my_list)} results being analysed')
+    embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-'
+                            'EBay_logo.svg.png')
+    embed.set_footer(text=f'There are a total of {len(my_list)} results being analysed',
+                     icon_url='https://img.icons8.com/fluency/512/paid.png')
 
     await ctx.send(embed=embed)
 
