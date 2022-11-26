@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import random
 import datetime
 import passives
 import actives
@@ -54,12 +53,6 @@ async def on_message(message):
             await message.channel.send("https://amazon.co.uk/" + new_link[gp_pos] + "/" + new_link[product_pos]
                                        + "/" + new_link[id_pos])
             await message.delete()
-
-
-@bot.command()
-async def lolrole(ctx):
-    roles = ["Top", "Jungle", "Mid", "ADC", "Support"]
-    await ctx.send(random.choice(roles))
 
 
 # op.gg profile for summoner name entered after command
@@ -158,38 +151,116 @@ async def clear(ctx, amount=1):
 
 # command to search for sold items on eBay to get an idea of its market value
 @bot.command()
-async def ebay(ctx, *, item):
-    formatted_search_term = item
-    if " " in item:
+async def search(ctx, *, item):
+    if 'help' in item:
+        help_embed = discord.Embed(
+            title=f'eBay Search Help',
+            description='Here are the proper ways to search. \n '
+                        'Filters being used: Exact words, Sold listings, Used, UK only',
+            colour=0xc48c02,
+        )
+
+        help_embed.add_field(name='Format',
+                             value=f'**DO NOT ABUSE** this command as it **may get IP blocked** by eBay!\n'
+                                   f'The correct way to search is by typing: !search `[item]` \n '
+                                   f'\n'
+                                   f'Example: !search rtx 3070',
+                             inline=False)
+        help_embed.add_field(name='Item category',
+                             value=f'You will sometimes have to include the item category in the '
+                                   f'search. Items such as CPUs or RAM may get diluted in the search results because '
+                                   f'they are part of a PC build. \n'
+                                   f'\n'
+                                   f'Example: !search ryzen 5800x **cpu**',
+                             inline=False)
+        help_embed.add_field(name='0 results',
+                             value='You may have entered the wrong spelling of the item you are trying to search '
+                                   'for. \n'
+                                   '\n'
+                                   'There may be *no results* for your item on eBay. \n '
+                                   'It might also be because there are no results with the matching search term. ',
+                             inline=False)
+        help_embed.add_field(name='Inflated prices',
+                             value=f'If you come across higher/lower values than expected, it may be due to the search '
+                                   f'filter being used is accounting for irrelevant items. \n'
+                                   f'\n'
+                                   f'Look at the prices displayed in the Range column. '
+                                   f"If the range's lower value is quite low or the range's upper value is quite high, "
+                                   f'accessories or other items may be included in the search. ',
+                             inline=False)
+        help_embed.add_field(name='Low numbers of items being analysed',
+                             value=f'Sometimes, there are a low number of items being analysed. This is due to there '
+                                   f'not being as many items sold on eBay with the search filters being used. More '
+                                   f'often, it may mean there is a lack of **used** items being sold.',
+                             inline=False)
+        help_embed.add_field(name='If everything fails',
+                             value=f'Please use the manual [eBay Advanced search]'
+                                   f'(https://www.ebay.co.uk/sch/ebayadvsearch) and go from there. This bot cannot help'
+                                   f' you in this case. :( ',
+                             inline=False)
+
+        await ctx.send(embed=help_embed)
+
+    elif ' ' in item or '' in item:
         formatted_search_term = item.replace(" ", "+")
 
-    soup = ebay_scraper.website_data(formatted_search_term)
-    my_list = ebay_scraper.get_data(soup)
+        soup = ebay_scraper.website_data(formatted_search_term)
+        my_list = ebay_scraper.get_data(soup)
 
-    mean, median, mode = ebay_scraper.calculate_averages(my_list)
-    minimum_value = min(my_list)
-    maximum_value = max(my_list)
+        # No items found in search result found and list is empty
+        if not my_list:
+            no_results_embed = discord.Embed(
+                title=f'eBay Sold Items Search: {item}',
+                description=f'There were 0 results for your search!',
+                colour=0xce2d32,
+            )
 
-    embed = discord.Embed(
-        title='eBay Sold Items Search',
-        description='Filters: **Exact words**, **Sold listings**, **Used**, **UK only** \n'
-                    'The values below may not reflect all of the sold items due to the link and filers being used in '
-                    '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch). Separate accessories sold may '
-                    'be included in the search!',
-        colour=0x6b9312,
-    )
+            no_results_embed.add_field(name="Wrong spelling?",
+                                       value=f'Make sure you spelt the item correctly, as the search filter is looking '
+                                             f'for an exact match. \n'
+                                             f'\n'
+                                             f'Incorrect spelling example: !search ry**x**en 5600x cpu \n '
+                                             f'This will return 0 results because `ryzen` is spelt incorrectly.',
+                                       inline=False)
+            no_results_embed.add_field(name="No used items sold",
+                                       value=f'There may be *no results* for your item on eBay. \n '
+                                             f'It might also be because there are no results with the matching '
+                                             f'search term. \n'
+                                             f'\n'
+                                             f'In this case, it might be better for you to manually use the '
+                                             f'[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch) and '
+                                             f'see the status of the market for your item. \n'
+                                             f'\n'
+                                             f'`!search help` may be able to help you.',
+                                       inline=False)
 
-    embed.add_field(name="Average", value=f'£{mean:.2f}', inline=False)
-    embed.add_field(name="Median", value=f'£{median:.2f}', inline=True)
-    embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=True)
-    embed.add_field(name="Range", value=f'£{minimum_value:.2f} to £{maximum_value:.2f}', inline=True)
+            await ctx.send(embed=no_results_embed)
 
-    embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-'
-                            'EBay_logo.svg.png')
-    embed.set_footer(text=f'There are a total of {len(my_list)} results being analysed',
-                     icon_url='https://img.icons8.com/fluency/512/paid.png')
+        # There are sold items in the search result and the list has values
+        else:
+            mean, median, mode = ebay_scraper.calculate_averages(my_list)
+            minimum_value = min(my_list)
+            maximum_value = max(my_list)
 
-    await ctx.send(embed=embed)
+            embed = discord.Embed(
+                title=f'eBay Sold Items Search: {item}',
+                description='The values below may not reflect all of the sold items due to filers being '
+                            'used on [eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch). Separate '
+                            'accessories sold may be included in the search. Use `!search help` for help.',
+                colour=0x6b9312,
+            )
+
+            embed.add_field(name="Average", value=f'£{mean:.2f}', inline=False)
+            embed.add_field(name="Median", value=f'£{median:.2f}', inline=True)
+            embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=True)
+            embed.add_field(name="Range", value=f'£{minimum_value:.2f} to £{maximum_value:.2f}', inline=True)
+
+            embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-'
+                                    'EBay_logo.svg.png')
+            embed.set_footer(text=f'There are a total of {len(my_list)} results being analysed. ',
+                             icon_url='https://img.icons8.com/fluency/512/paid.png')
+
+            await ctx.send(embed=embed)
 
 
 bot.run(actives.token)
