@@ -77,7 +77,7 @@ async def ig(ctx, *, summoner_name):
     embed = discord.Embed(
         title="Live Game Match-Up",
         description=f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
-        colour=0xbc8125
+        colour=0xbc8125,
     )
 
     blue_champs = blue_ranks = blue_wr = ""
@@ -166,10 +166,21 @@ async def ebay(ctx, *, item):
     my_list = ebay_scraper.get_data(soup)
     mean, median, mode = ebay_scraper.calculate_averages(my_list)
 
-    await ctx.send(f'Total results: {len(my_list)} \n'
-                   f'\n'
-                   f'Average sold price: £{mean:.2f} \n'
-                   f'The median price is: £{median:.2f} \n'
-                   f'The mode is: £{mode:.2f}')
+    embed = discord.Embed(
+        title='eBay Sold Items Search',
+        description='The values below may not reflect all of the items in the market due to the filers used in '
+                    'eBay Advanced search',
+        colour=0x6b9312,
+    )
+
+    embed.add_field(name="Average", value=f'£{mean:.2f}', inline=False)
+    embed.add_field(name="Median", value=f'£{median:.2f}', inline=False)
+    embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=False)
+
+    embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-EBay_logo.svg.png')
+    embed.set_footer(text=f'There are a total of {len(my_list)} results')
+
+    await ctx.send(embed=embed)
+
 
 bot.run(actives.token)
