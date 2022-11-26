@@ -5,6 +5,7 @@ import datetime
 import passives
 import actives
 import in_game_scraper
+import ebay_scraper
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -154,5 +155,21 @@ async def patch(ctx, *, game):
 async def clear(ctx, amount=1):
     await ctx.channel.purge(limit=amount + 1)
 
+
+@bot.command()
+async def ebay(ctx, *, item):
+    formatted_search_term = item
+    if " " in item:
+        formatted_search_term = item.replace(" ", "+")
+
+    soup = ebay_scraper.website_data(formatted_search_term)
+    my_list = ebay_scraper.get_data(soup)
+    mean, median, mode = ebay_scraper.calculate_averages(my_list)
+
+    await ctx.send(f'Total results: {len(my_list)} \n'
+                   f'\n'
+                   f'Average sold price: £{mean:.2f} \n'
+                   f'The median price is: £{median:.2f} \n'
+                   f'The mode is: £{mode:.2f}')
 
 bot.run(actives.token)
