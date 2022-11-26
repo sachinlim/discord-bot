@@ -10,8 +10,6 @@ def website_data(search):
           f'&_sargn=-1%26saslc%3D1&_fsradio2=%26LH_LocatedIn%3D1&_salic=3&LH_SubLocation=1&_sop=12&_dmd=1&_ipg=60' \
           f'&LH_Complete=1&rt=nc&LH_PrefLoc=1'
 
-    ''
-
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     return soup
