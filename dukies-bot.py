@@ -168,8 +168,9 @@ async def ebay(ctx, *, item):
 
     embed = discord.Embed(
         title='eBay Sold Items Search',
-        description='The values below may not reflect all of the items in the market due to the filers used in '
-                    'eBay Advanced search',
+        description='Filters: **Sold listings**, **Used**, **UK only**. \n'
+                    'The values below may not reflect all of the items in the market due to the filers being used in '
+                    '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch) and the link used. \n',
         colour=0x6b9312,
     )
 
@@ -178,7 +179,7 @@ async def ebay(ctx, *, item):
     embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=False)
 
     embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-EBay_logo.svg.png')
-    embed.set_footer(text=f'There are a total of {len(my_list)} results')
+    embed.set_footer(text=f'There are a total of {len(my_list)} results being analysed')
 
     await ctx.send(embed=embed)
 
