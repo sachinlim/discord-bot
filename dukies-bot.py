@@ -168,9 +168,9 @@ async def ebay(ctx, *, item):
 
     embed = discord.Embed(
         title='eBay Sold Items Search',
-        description='Filters: **Sold listings**, **Used**, **UK only**. \n'
+        description='Filters: **Exact words**, **Sold listings**, **Used**, **UK only** \n'
                     'The values below may not reflect all of the items in the market due to the filers being used in '
-                    '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch) and the link used. \n',
+                    '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch) and the link used \n',
         colour=0x6b9312,
     )
 
