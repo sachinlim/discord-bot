@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import datetime
+import math
 import passives
 import actives
 import in_game_scraper
@@ -14,7 +15,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print("Bot is working!")
+    print("Bot is online!")
 
 
 @bot.event
@@ -155,38 +156,48 @@ async def search(ctx, *, item):
     if 'help' in item:
         help_embed = discord.Embed(
             title=f'eBay Search Help',
-            description='Here are the proper ways to search. \n '
+            description='Here are the proper ways to search.\n '
                         'Filters being used: Exact words, Sold listings, Used, UK only',
             colour=0xc48c02,
         )
 
         help_embed.add_field(name='Format',
                              value=f'**DO NOT ABUSE** this command as it **may get IP blocked** by eBay!\n'
-                                   f'The correct way to search is by typing: !search `[item]` \n '
+                                   f'The correct way to search is by typing: !search `[item]`\n '
                                    f'\n'
                                    f'Example: !search rtx 3070',
                              inline=False)
-        help_embed.add_field(name='Item category',
-                             value=f'You will sometimes have to include the item category in the '
-                                   f'search. Items such as CPUs or RAM may get diluted in the search results because '
-                                   f'they are part of a PC build. \n'
+        help_embed.add_field(name='Specific items',
+                             value=f'Items such as CPUs or RAM may get diluted in the search results because '
+                                   f'they are part of a PC build. Some items may need to be formatted in a way '
+                                   f'so that the search filter searches for the right items.\n'
                                    f'\n'
-                                   f'Example: !search ryzen 5800x **cpu**',
+                                   f'Example: !search ryzen 5800x **cpu**\n'
+                                   f'Example: !search ddr4 ram **2x8gb**',
                              inline=False)
         help_embed.add_field(name='0 results',
                              value='You may have entered the wrong spelling of the item you are trying to search '
-                                   'for. \n'
+                                   'for.\n'
                                    '\n'
-                                   'There may be *no results* for your item on eBay. \n '
+                                   'There may be *no results* for your item on eBay. '
                                    'It might also be because there are no results with the matching search term. ',
+                             inline=False)
+        help_embed.add_field(name='What is the trimmed mean?',
+                             value=f'The trimmed mean is the average of the results with the x% of results removed '
+                                   f'from the lowest and highest values.\n'
+                                   f'\n'
+                                   f'For this search, the trimmed mean is set to '
+                                   f'15%. 15% of the lowest and highest results are removed to remove any potential '
+                                   f'outliers.',
                              inline=False)
         help_embed.add_field(name='Inflated prices',
                              value=f'If you come across higher/lower values than expected, it may be due to the search '
-                                   f'filter being used is accounting for irrelevant items. \n'
+                                   f'filter being used is accounting for irrelevant items. Even with the trimmed mean '
+                                   f'in-place, it cannot remove everything.\n '
                                    f'\n'
                                    f'Look at the prices displayed in the Range column. '
                                    f"If the range's lower value is quite low or the range's upper value is quite high, "
-                                   f'accessories or other items may be included in the search. ',
+                                   f'accessories or other items may be included in the pool of results. ',
                              inline=False)
         help_embed.add_field(name='Low numbers of items being analysed',
                              value=f'Sometimes, there are a low number of items being analysed. This is due to there '
@@ -202,6 +213,7 @@ async def search(ctx, *, item):
         await ctx.send(embed=help_embed)
 
     elif ' ' in item or '' in item:
+        # eBay wants to use + in place of spaces in the search term
         formatted_search_term = item.replace(" ", "+")
 
         soup = ebay_scraper.website_data(formatted_search_term)
@@ -215,49 +227,64 @@ async def search(ctx, *, item):
                 colour=0xce2d32,
             )
 
-            no_results_embed.add_field(name="Wrong spelling?",
-                                       value=f'Make sure you spelt the item correctly, as the search filter is looking '
-                                             f'for an exact match. \n'
+            no_results_embed.add_field(name='What happened?',
+                                       value=f'- Make sure you spelt the item correctly, as the search filter is looking '
+                                             f'for an exact match.\n'
                                              f'\n'
-                                             f'Incorrect spelling example: !search ry**x**en 5600x cpu \n '
-                                             f'This will return 0 results because `ryzen` is spelt incorrectly.',
+                                             f'- There may be 0 results for your item that are sold as used on eBay\n'
+                                             f'\n'
+                                             f'`!search help` may be able to help you',
                                        inline=False)
-            no_results_embed.add_field(name="No used items sold",
-                                       value=f'There may be *no results* for your item on eBay. \n '
-                                             f'It might also be because there are no results with the matching '
-                                             f'search term. \n'
+            no_results_embed.add_field(name='Bot no longer working',
+                                       value=f'If you know that there are used items in the market and your spelling '
+                                             f'is correct, then the bot may have been IP Blocked by eBay.\n'
                                              f'\n'
                                              f'In this case, it might be better for you to manually use the '
                                              f'[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch) and '
-                                             f'see the status of the market for your item. \n'
-                                             f'\n'
-                                             f'`!search help` may be able to help you.',
+                                             f'see the status of the market for your item.',
                                        inline=False)
 
             await ctx.send(embed=no_results_embed)
 
         # There are sold items in the search result and the list has values
         else:
-            mean, median, mode = ebay_scraper.calculate_averages(my_list)
-            minimum_value = min(my_list)
-            maximum_value = max(my_list)
+            trim_percentage, trimmed_mean, median, mode = ebay_scraper.calculate_averages(my_list)
+
+            # Calculating the total number of results in the list after trimming for the mean
+            # Trimming leads to x number of values (rounded up) being removed from both sides of the list
+            list_total = len(my_list)
+
+            trimming = list_total * trim_percentage
+            trimming = math.ceil(trimming)
+            trimmings_for_both_sides = trimming * 2
+            trimmed_list_total = list_total - trimmings_for_both_sides
+
+            # Calculating values for the range after trimming
+            my_sorted_list = sorted(my_list)
+
+            minimum_value = min(my_sorted_list[trimming:])
+            maximum_value = max(my_sorted_list[:-trimming])
+
+            print(my_list)
+            print(my_sorted_list)
 
             embed = discord.Embed(
                 title=f'eBay Sold Items Search: {item}',
-                description='The values below may not reflect all of the sold items due to filers being '
-                            'used on [eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch). Separate '
-                            'accessories sold may be included in the search. Use `!search help` for help.',
+                description='The values below may not contain all of the sold items due to the filers being used on '
+                            '[eBay Advanced search](https://www.ebay.co.uk/sch/ebayadvsearch). The results are trimmed '
+                            f'by {int(trim_percentage * 100)}% to remove outliers. Use `!search help` for help.',
                 colour=0x6b9312,
             )
 
-            embed.add_field(name="Average", value=f'£{mean:.2f}', inline=False)
+            embed.add_field(name="Average Sold Price", value=f'£{trimmed_mean:.2f}', inline=False)
             embed.add_field(name="Median", value=f'£{median:.2f}', inline=True)
             embed.add_field(name="Mode", value=f'£{mode:.2f}', inline=True)
             embed.add_field(name="Range", value=f'£{minimum_value:.2f} to £{maximum_value:.2f}', inline=True)
 
             embed.set_thumbnail(url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-'
                                     'EBay_logo.svg.png')
-            embed.set_footer(text=f'There are a total of {len(my_list)} results being analysed. ',
+            embed.set_footer(text=f'There were a total of {list_total} search results. After trimming '
+                                  f'{trimmings_for_both_sides}, there were {trimmed_list_total} left.',
                              icon_url='https://img.icons8.com/fluency/512/paid.png')
 
             await ctx.send(embed=embed)

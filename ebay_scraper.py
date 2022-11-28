@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import statistics
+from scipy import stats
 
 
 def website_data(search):
@@ -22,6 +23,8 @@ def get_data(soup):
     for item in results:
         price = item.find('span', class_='s-item__price').text.replace('£', '').replace(',', '')
 
+        # Removing the results with that show a range of prices for the same listing
+        # For example, £169.99 to £189.99
         if 'to' not in price:
             price = float(price)
             products.append(price)
@@ -30,8 +33,12 @@ def get_data(soup):
 
 
 def calculate_averages(products):
-    mean = statistics.mean(products)
     median = statistics.median(products)
     mode = statistics.mode(products)
 
-    return mean, median, mode
+    # Mean must be trimmed as some outliers may exist in the search results
+    # Trimming is set to 10%
+    trim_percentage = 0.15
+    trimmed_mean = stats.trim_mean(products, trim_percentage)
+
+    return trim_percentage, trimmed_mean, median, mode
