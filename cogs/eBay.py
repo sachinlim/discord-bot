@@ -3,8 +3,6 @@ from discord.ext import commands
 import requests
 from bs4 import BeautifulSoup
 import statistics
-import math
-from scipy import stats
 
 
 class EbayScraper(commands.Cog):
@@ -12,11 +10,11 @@ class EbayScraper(commands.Cog):
         self.bot = bot
 
     def website_data(self, search):
-        # URL contains search filters: exact match any order, used items, sold listings, and UK only
+        # URL contains search filters: used items, sold listings, and UK only
         url = f'https://www.ebay.co.uk/sch/i.html?_from=R40&_nkw={search}' \
-              f'&_in_kw=4&_ex_kw=&_sacat=0&LH_Sold=1&_udlo=&_udhi=&LH_ItemCondition=4&_samilow=&_samihi=&_stpos=M300AA' \
-              f'&_sargn=-1%26saslc%3D1&_fsradio2=%26LH_LocatedIn%3D1&_salic=3&LH_SubLocation=1&_sop=12&_dmd=1&_ipg=60' \
-              f'&LH_Complete=1&rt=nc&LH_PrefLoc=1'
+              f'&_in_kw=4&_ex_kw=&_sacat=0&LH_Sold=1&_udlo=&_udhi=&LH_ItemCondition=4&_samilow=&_samihi=' \
+              f'&_stpos=M300AA&_sargn=-1%26saslc%3D1&_fsradio2=%26LH_LocatedIn%3D1&_salic=3&LH_SubLocation=1' \
+              f'&_sop=12&_dmd=1&_ipg=60&LH_Complete=1&rt=nc&LH_PrefLoc=1'
 
         r = requests.get(url)
         soup = BeautifulSoup(r.text, 'html.parser')
@@ -24,28 +22,36 @@ class EbayScraper(commands.Cog):
 
     def get_data(self, soup):
         products = []
-        results = soup.find('div', {'class': 'srp-river-results clearfix'}).find_all('li', {'class': 's-item '
-                                                                                                     's-item__pl-on-bottom'})
+        results = soup.find('div', {'class': 'srp-river-results clearfix'}).find_all('li', {'class':
+                                                                                                's-item s-item__pl-on-bottom'})
         for item in results:
             price = item.find('span', class_='s-item__price').text.replace('£', '').replace(',', '')
 
-            # Removing the results with that show a range of prices for the same listing
-            # For example, £169.99 to £189.99
+            # Removing the results that show a range of prices for the same (sold) listing
+            # For example, £169.99 to £189.99 does not show the exact sold price
             if 'to' not in price:
                 price = float(price)
                 products.append(price)
 
-        return products
+        original_results_length = len(products)
 
-    def calculate_averages(self, products):
-        median = statistics.median(products)
-        mode = statistics.mode(products)
-
-        # Mean must be trimmed as some outliers may exist in the search results
+        # Results must be trimmed as some outliers may exist in the list of sold prices from the search results
+        # The results are trimmed from both ends of the list once the data has been sorted from low to high
         trim_percentage = 0.15
-        trimmed_mean = stats.trim_mean(products, trim_percentage)
+        trimming = original_results_length * trim_percentage
+        trimming = round(trimming)
 
-        return trim_percentage, trimmed_mean, median, mode
+        products.sort()
+        trimmed_results_list = products[trimming:-trimming]
+
+        return trimmed_results_list, trim_percentage, trimming, original_results_length
+
+    def calculate_averages(self, results):
+        trimmed_mean = statistics.mean(results)
+        median = statistics.median(results)
+        mode = statistics.mode(results)
+
+        return trimmed_mean, median, mode,
 
     # command to search for sold items on eBay to get an idea of its market value
     @commands.command()
@@ -109,10 +115,10 @@ class EbayScraper(commands.Cog):
             formatted_search_term = item.replace(" ", "+")
 
             soup = self.website_data(formatted_search_term)
-            my_list = self.get_data(soup)
+            trimmed_result_list, trim_percentage, trimming, original_results_length = self.get_data(soup)
 
             # No items found in search result found and list is empty
-            if not my_list:
+            if not trimmed_result_list:
                 no_results_embed = discord.Embed(
                     title=f'eBay Sold Items Search: {item}',
                     description='There were 0 results for your search!',
@@ -145,22 +151,11 @@ class EbayScraper(commands.Cog):
 
             # There are sold items in the search result and the list has values
             else:
-                trim_percentage, trimmed_mean, median, mode = self.calculate_averages(my_list)
+                trimmed_mean, median, mode = self.calculate_averages(trimmed_result_list)
 
-                # Calculating the total number of results in the list after trimming for the mean
-                # Trimming leads to x number of values (rounded up) being removed from both sides of the list
-                list_total = len(my_list)
-
-                trimming = list_total * trim_percentage
-                trimming = math.ceil(trimming)
-                trimmings_for_both_sides = trimming * 2
-                trimmed_list_total = list_total - trimmings_for_both_sides
-
-                # Calculating values for the range after trimming
-                my_sorted_list = sorted(my_list)
-
-                minimum_value = min(my_sorted_list[trimming:])
-                maximum_value = max(my_sorted_list[:-trimming])
+                # Calculating the first and last values in the sorted list of results for the range
+                minimum_value = min(trimmed_result_list)
+                maximum_value = max(trimmed_result_list)
 
                 embed = discord.Embed(
                     title=f'eBay Sold Items Search: {item}',
@@ -179,8 +174,8 @@ class EbayScraper(commands.Cog):
                 embed.set_thumbnail(
                     url='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/EBay_logo.svg/2560px-'
                         'EBay_logo.svg.png')
-                embed.set_footer(text=f'There were a total of {list_total} search results. After trimming '
-                                      f'{trimmings_for_both_sides}, there were {trimmed_list_total} left.',
+                embed.set_footer(text=f'There were a total of {original_results_length} search results. After trimming '
+                                      f'{trimming * 2}, there were {len(trimmed_result_list)} left.',
                                  icon_url='https://img.icons8.com/fluency/512/paid.png')
 
                 await ctx.send(embed=embed)
