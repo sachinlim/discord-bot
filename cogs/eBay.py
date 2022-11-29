@@ -9,6 +9,12 @@ class EbayScraper(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    def format_search_term(self, link):
+        # eBay wants to use + in place of spaces in the search term
+        formatted_search_term = link.replace(" ", "+")
+
+        return formatted_search_term
+
     def website_data(self, search):
         # URL contains search filters: used items, sold listings, and UK only
         url = f'https://www.ebay.co.uk/sch/i.html?_from=R40&_nkw={search}' \
@@ -51,11 +57,21 @@ class EbayScraper(commands.Cog):
         median = statistics.median(results)
         mode = statistics.mode(results)
 
-        return trimmed_mean, median, mode,
+        return trimmed_mean, median, mode
 
-    # command to search for sold items on eBay to get an idea of its market value
+    def calculate_range(self, my_list):
+        # Calculating the first and last values in the sorted list of results for the range
+        minimum_value = min(my_list)
+        maximum_value = max(my_list)
+
+        return minimum_value, maximum_value
+
     @commands.command()
     async def search(self, ctx, *, item):
+        """
+        Command to search for sold items on eBay to get an idea of its market value
+        A help command exists to help the user understand how to use the search command
+        """
         if 'help' in item:
             help_embed = discord.Embed(
                 title=f'eBay Search Help',
@@ -111,14 +127,13 @@ class EbayScraper(commands.Cog):
             await ctx.send(embed=help_embed)
 
         elif ' ' in item or '' in item:
-            # eBay wants to use + in place of spaces in the search term
-            formatted_search_term = item.replace(" ", "+")
+            formatted_search_term = self.format_search_term(item)
 
             soup = self.website_data(formatted_search_term)
             trimmed_result_list, trim_percentage, trimming, original_results_length = self.get_data(soup)
 
-            # No items found in search result found and list is empty
             if not trimmed_result_list:
+                # No items found in search results and list is empty gives an error embedded message in red
                 no_results_embed = discord.Embed(
                     title=f'eBay Sold Items Search: {item}',
                     description='There were 0 results for your search!',
@@ -149,13 +164,10 @@ class EbayScraper(commands.Cog):
 
                 await ctx.send(embed=no_results_embed)
 
-            # There are sold items in the search result and the list has values
             else:
+                # There are sold items in the search result and the list has values
                 trimmed_mean, median, mode = self.calculate_averages(trimmed_result_list)
-
-                # Calculating the first and last values in the sorted list of results for the range
-                minimum_value = min(trimmed_result_list)
-                maximum_value = max(trimmed_result_list)
+                minimum_value, maximum_value = self.calculate_range(trimmed_result_list)
 
                 embed = discord.Embed(
                     title=f'eBay Sold Items Search: {item}',
