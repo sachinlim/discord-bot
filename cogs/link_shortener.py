@@ -5,10 +5,9 @@ class LinkShortener(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # Shortens website links from eBay and Amazon before deleting the long link
     @commands.Cog.listener("on_message")
     async def on_message(self, message):
-        # Shortens eBay links
+        # Shortens website links from eBay and Amazon before deleting the long link
         if message.content.startswith('https://www.ebay.co.uk/itm/'):
             if "?" in message.content:
                 new_link = message.content.split("?")[0]
@@ -17,7 +16,7 @@ class LinkShortener(commands.Cog):
                                            f'{message.author.mention}: {new_link}')
                 await message.delete()
 
-        # Shortens Amazon links
+        # Amazon can start with smile.amazon because of their charity donation website version
         if message.content.startswith('https://www.amazon.co.uk/') or \
                 message.content.startswith('https://smile.amazon.co.uk/'):
             if "/dp/" in message.content:

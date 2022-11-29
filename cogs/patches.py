@@ -5,9 +5,9 @@ class Patches(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # patch notes
     @commands.command()
     async def patch(self, ctx, *, game):
+        # patch notes for specified game
         match game:
             case 'lol':
                 await ctx.send('https://www.leagueoflegends.com/en-us/news/tags/patch-notes/')

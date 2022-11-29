@@ -9,17 +9,19 @@ class Opgg(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # op.gg replaces blank spaces with "%20"
     def op_format(self, summoner_name):
+        # op.gg replaces blank spaces with "%20"
         formatted = summoner_name
         if " " in summoner_name:
             formatted = summoner_name.replace(' ', '%20')
 
         return formatted
 
-    # Scraping data from op.gg live game viewer
-    # The player must be in a spectate-able game to be able to view this information
     def get_data(self, summoner_name):
+        """
+        Scraping data from op.gg live game viewer
+        The player must be in a spectate-able game to be able to view this information
+        """
         url = f'https://www.op.gg/summoners/euw/{summoner_name}/ingame'
 
         path = 'chromedriver'
@@ -49,23 +51,27 @@ class Opgg(commands.Cog):
         driver.quit()
         return final_list
 
-    # op.gg profile for summoner name entered after command
     @commands.command()
     async def op(self, ctx, *, summoner_name):
+        # op.gg profile for summoner name entered after command
         formatted = self.op_format(summoner_name)
         await ctx.send(f'https://www.op.gg/summoners/euw/{formatted}')
 
     @commands.command()
     async def ig(self, ctx, *, summoner_name):
+        # Link to op.gg live game webpage for specified summoner name
         if " " in summoner_name:
             formatted = self.op_format(summoner_name)
             await ctx.send(f'https://www.op.gg/summoners/euw/{formatted}/ingame')
         else:
             await ctx.send(f'https://www.op.gg/summoners/euw/{summoner_name}/ingame')
 
-    # Link to live game for summoner name entered after command
     @commands.command()
     async def ig2(self, ctx, *, summoner_name):
+        """
+        Scraping live game information from the website available on op.gg
+        Sends out an embedded message to show match-up without having to go to the link provided in ig()
+        """
         formatted = self.op_format(summoner_name)
 
         embed = discord.Embed(

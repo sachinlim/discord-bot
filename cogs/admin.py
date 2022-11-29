@@ -5,9 +5,9 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # command to delete previous messages
     @commands.command()
     async def clear(self, ctx, amount=1):
+        # command to delete previous messages
         await ctx.channel.purge(limit=amount + 1)
 
 
