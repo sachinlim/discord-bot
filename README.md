@@ -1,1 +1,1 @@
-# dukies-bot
+# Discord Bot
