@@ -118,11 +118,11 @@ class Weather(commands.Cog):
             sunrise_time = datetime.datetime.utcfromtimestamp(response['sys']['sunrise'] + response['timezone'])
             sunset_time = datetime.datetime.utcfromtimestamp(response['sys']['sunset'] + response['timezone'])
 
-            temperature = self.get_embed_colour(current_temperature)
+            temperature_colour = self.get_embed_colour(current_temperature)
 
             embed = discord.Embed(
                 title=f'Weather Update',
-                colour=temperature,
+                colour=temperature_colour,
             )
 
             embed.set_thumbnail(url=self.get_thumbnail(weather_id))
