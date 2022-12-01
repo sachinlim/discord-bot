@@ -128,7 +128,7 @@ class Weather(commands.Cog):
             embed.set_thumbnail(url=self.get_thumbnail(weather_id))
 
             embed.add_field(name=f'{city_name}, {country_code}',
-                            value=f'**Conditions**: {weather_description.title()}\n'
+                            value=f'**Condition**: {weather_description.title()}\n'
                                   f'**Temperature**: {current_temperature}°C\n'
                                   f'**Feels like**: {temperature_feels_like}°C\n'
                                   f'**Humidity**: {humidity}%\n'
