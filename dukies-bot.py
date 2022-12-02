@@ -22,12 +22,6 @@ async def on_ready():
     print("Bot is online!")
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('Please enter the search term!')
-
-
 async def main():
     await load()
     await bot.start(actives.token)

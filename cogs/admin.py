@@ -10,6 +10,11 @@ class Admin(commands.Cog):
         # command to delete previous messages
         await ctx.channel.purge(limit=amount + 1)
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Please enter the search term!')
+
 
 async def setup(bot):
     await bot.add_cog(Admin(bot))
