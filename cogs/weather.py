@@ -1,5 +1,6 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
+from datetime import datetime
 import actives
 import datetime
 import requests
@@ -91,57 +92,74 @@ class Weather(commands.Cog):
             return 0xa9d6ea
         if 1 < number <= 10:
             return 0xa9eab0
-        if 11 <= number <= 16:
+        if 11 <= number <= 19:
             return 0xb0e07a
-        if 17 <= number <= 24:
+        if 20 <= number <= 25:
             return 0xe1c932
-        if 25 <= number <= 33:
+        if 26 <= number <= 33:
             return 0xdf4d1c
         if number >= 34:
             return 0xb8001c
 
+    def assign_variables(self, city):
+        city_name, country_code = self.get_location(city)
+
+        url = self.get_url(city_name, country_code)
+        response = requests.get(url).json()
+
+        weather_id = response['weather'][0]['main']
+        weather_description = response['weather'][0]['description']
+        current_temperature = response['main']['temp']
+        temperature_feels_like = response['main']['feels_like']
+        humidity = response['main']['humidity']
+        wind_speed = self.convert_ms_to_mph(response['wind']['speed'])
+
+        sunrise_time = datetime.datetime.utcfromtimestamp(response['sys']['sunrise'] + response['timezone'])
+        sunset_time = datetime.datetime.utcfromtimestamp(response['sys']['sunset'] + response['timezone'])
+
+        return city_name, country_code, weather_id, weather_description, current_temperature, temperature_feels_like, \
+            humidity, wind_speed, sunrise_time, sunset_time
+
+    def create_embed(self, temperature_colour, weather_id, city_name, country_code, weather_description,
+                     current_temperature, temperature_feels_like, humidity, wind_speed, sunrise_time,
+                     sunset_time):
+        embed = discord.Embed(
+            title=f'Weather Update at {datetime.datetime.now().time():%H:%M}',
+            colour=temperature_colour,
+        )
+
+        embed.set_thumbnail(url=self.get_thumbnail(weather_id))
+
+        embed.add_field(name=f'{city_name},{country_code}',
+                        value=f'**Condition**: {weather_description.title()}\n'
+                              f'**Temperature**: {current_temperature}°C\n'
+                              f'**Feels like**: {temperature_feels_like}°C\n'
+                              f'**Humidity**: {humidity}%\n'
+                              f'**Wind Speed**: {wind_speed:.2f} mph',
+                        inline=False)
+
+        embed.set_footer(text=f'Sunrise is at {sunrise_time:%H:%M} am and Sunset is at {sunset_time:%H:%M} pm '
+                              f'local time | OpenWeatherMap',
+                         icon_url='https://openweathermap.org/themes/openweathermap/assets/img/mobile_app'
+                                  '/android-app-top-banner.png')
+
+        return embed
+
     @commands.command()
-    async def weather(self, ctx, *, city):
+    async def weather(self, ctx=None, *, city):
+        """
+        Weather command that sends the weather report at that specific time
+        Can be used to get an urgent weather report instead of waiting for the hourly update
+        """
         try:
-            city_name, country_code = self.get_location(city)
-
-            url = self.get_url(city_name, country_code)
-            response = requests.get(url).json()
-
-            weather_id = response['weather'][0]['main']
-            weather_description = response['weather'][0]['description']
-            current_temperature = response['main']['temp']
-            temperature_feels_like = response['main']['feels_like']
-            humidity = response['main']['humidity']
-            wind_speed = self.convert_ms_to_mph(response['wind']['speed'])
-
-            sunrise_time = datetime.datetime.utcfromtimestamp(response['sys']['sunrise'] + response['timezone'])
-            sunset_time = datetime.datetime.utcfromtimestamp(response['sys']['sunset'] + response['timezone'])
+            city_name, country_code, weather_id, weather_description, current_temperature, temperature_feels_like, \
+            humidity, wind_speed, sunrise_time, sunset_time = self.assign_variables(city)
 
             temperature_colour = self.get_embed_colour(current_temperature)
 
-            embed = discord.Embed(
-                title=f'Weather Update',
-                colour=temperature_colour,
-            )
-
-            embed.set_thumbnail(url=self.get_thumbnail(weather_id))
-
-            embed.add_field(name=f'{city_name}, {country_code}',
-                            value=f'**Condition**: {weather_description.title()}\n'
-                                  f'**Temperature**: {current_temperature}°C\n'
-                                  f'**Feels like**: {temperature_feels_like}°C\n'
-                                  f'**Humidity**: {humidity}%\n'
-                                  f'**Wind Speed**: {wind_speed:.2f} mph',
-                            inline=False)
-
-            embed.set_footer(text=f'Sunrise is at {sunrise_time:%H:%M} am and Sunset is at {sunset_time:%H:%M} pm '
-                                  f'local time | OpenWeatherMap',
-                             icon_url='https://openweathermap.org/themes/openweathermap/assets/img/mobile_app'
-                                      '/android-app-top-banner.png')
-
-            await ctx.send(embed=embed)
-
+            await ctx.send(embed=self.create_embed(temperature_colour, weather_id, city_name, country_code,
+                                                   weather_description, current_temperature, temperature_feels_like,
+                                                   humidity, wind_speed, sunrise_time, sunset_time))
         except:
             embed = discord.Embed(
                 title="No response",
@@ -157,6 +175,45 @@ class Weather(commands.Cog):
                                       '/android-app-top-banner.png')
 
             await ctx.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_ready(self):
+        """
+        Hourly weather updates need to be called/started once the bot is online
+        """
+        self.hourly_weather_update.start()
+
+    # Getting a list of times the hourly updates wil run
+    # Using a list containing 24 values is a method taken from the documentation example
+    hourly_update_times = []
+    for hours in range(0, 24):
+        hourly_update_times.append(datetime.time(hour=hours))
+
+    def get_city_weather(self, city):
+        """
+        This function returns the embedded message that contains the weather report for a given city
+        The information for the city will be collected by calling assign_variables() and get_embed_colour function
+        The embedded message is created by the create_embed() function
+        """
+        city_name, country_code, weather_id, weather_description, current_temperature, temperature_feels_like, \
+            humidity, wind_speed, sunrise_time, sunset_time = self.assign_variables(city)
+
+        temperature_colour = self.get_embed_colour(current_temperature)
+
+        return self.create_embed(temperature_colour, weather_id, city_name, country_code,
+                                 weather_description, current_temperature, temperature_feels_like,
+                                 humidity, wind_speed, sunrise_time, sunset_time)
+
+    @tasks.loop(time=hourly_update_times)
+    async def hourly_weather_update(self):
+        """
+        This function sends an embedded message to the specified channels every hour
+        The hours are contained in the hourly_update_times list and is stored in UTC format
+        """
+        await self.bot.get_channel(actives.weather_london).send(embed=self.get_city_weather('London, GB'))
+        await self.bot.get_channel(actives.weather_ashford).send(embed=self.get_city_weather('Ashford, GB'))
+        await self.bot.get_channel(actives.weather_kathmandu).send(embed=self.get_city_weather('Kathmandu, NP'))
+        await self.bot.get_channel(actives.weather_los_angeles).send(embed=self.get_city_weather('Los Angeles, US'))
 
 
 async def setup(bot):
