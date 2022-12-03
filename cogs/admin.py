@@ -7,7 +7,10 @@ class Admin(commands.Cog):
 
     @commands.command()
     async def clear(self, ctx, amount=1):
-        # command to delete previous messages
+        """
+        Command to delete previous messages
+        +1 is done so that the command call is also deleted
+        """
         await ctx.channel.purge(limit=amount + 1)
 
     @commands.Cog.listener()
