@@ -186,8 +186,14 @@ class Weather(commands.Cog):
         This function sends an embedded message to the specified channels every hour
         The hours are contained in the hourly_update_times list and is stored in UTC format
         """
+        # Weather for cities within the UK
         await self.bot.get_channel(actives.weather_london).send(embed=self.get_city_weather('London, GB'))
         await self.bot.get_channel(actives.weather_ashford).send(embed=self.get_city_weather('Ashford, GB'))
+        await self.bot.get_channel(actives.weather_surrey).send(embed=self.get_city_weather('Surrey, GB'))
+        await self.bot.get_channel(actives.weather_basingstoke).send(embed=self.get_city_weather('Basingstoke, GB'))
+        await self.bot.get_channel(actives.weather_shefford).send(embed=self.get_city_weather('Shefford, GB'))
+
+        # Weather for cities outside the UK
         await self.bot.get_channel(actives.weather_kathmandu).send(embed=self.get_city_weather('Kathmandu, NP'))
         await self.bot.get_channel(actives.weather_los_angeles).send(embed=self.get_city_weather('Los Angeles, US'))
 
