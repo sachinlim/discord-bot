@@ -189,9 +189,6 @@ class Weather(commands.Cog):
         # Weather for cities within the UK
         await self.bot.get_channel(actives.weather_london).send(embed=self.get_city_weather('London, GB'))
         await self.bot.get_channel(actives.weather_ashford).send(embed=self.get_city_weather('Ashford, GB'))
-        await self.bot.get_channel(actives.weather_surrey).send(embed=self.get_city_weather('Surrey, GB'))
-        await self.bot.get_channel(actives.weather_basingstoke).send(embed=self.get_city_weather('Basingstoke, GB'))
-        await self.bot.get_channel(actives.weather_shefford).send(embed=self.get_city_weather('Shefford, GB'))
 
         # Weather for cities outside the UK
         await self.bot.get_channel(actives.weather_kathmandu).send(embed=self.get_city_weather('Kathmandu, NP'))
