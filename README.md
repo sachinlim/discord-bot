@@ -1,5 +1,5 @@
-<img align="right" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png" width="110">
-<img align="right" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/625e5fcef7ab80b8c1fe559e_Discord-Logo-Color.png" width="110">
+<img align="right" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png" width="100">
+<img align="right" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/625e5fcef7ab80b8c1fe559e_Discord-Logo-Color.png" width="100">
 
 # Discord Bot 
 
@@ -52,24 +52,31 @@ In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeD
 
 This is the `!search` command that provides information from [eBay's advance search](https://www.ebay.co.uk/sch/ebayadvsearch) by scraping the information available. It uses Beautiful Soup to scrape the information while using the filters: Exact words, any order, Sold listings, Used, UK only.
 
-![Screenshot 2022-12-16 at 11 36 22](https://user-images.githubusercontent.com/80691974/208089922-d21f70c6-e779-4371-9c84-28a00093a3ea.JPG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208089922-d21f70c6-e779-4371-9c84-28a00093a3ea.JPG">
+</p>
 
 Sometimes, items are sold in bulk in a single listing, such as "5x Intel i5-7400", meaning the price for the listing is 5 times higher than if it was a single item sold. To avoid abnormalities like these, trimming is done by 15% from the lowest and highest prices, reducing the total list of items down to 70%. 
 
 In the event that there is a typo in the search term or the item does not exist, an error message is sent. 
 
-![Screenshot 2022-12-16 at 11 42 25](https://user-images.githubusercontent.com/80691974/208090929-065cead7-6951-41d9-bf64-3519e189e7c7.JPG)
-
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208090929-065cead7-6951-41d9-bf64-3519e189e7c7.JPG">
+</p>
 
 ### op.gg Live Game scraper 
 
 This scraper was made using Selenium to have information scraped. There are two versions of this: one using the command `!ig` which only provides the URL for the specified account name, while `!ig2` provides the scraped information. 
 
-![Screenshot 2022-12-16 at 12 13 02](https://user-images.githubusercontent.com/80691974/208095857-7d77e066-b103-48f1-8621-e5cadd57b82c.JPG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208095857-7d77e066-b103-48f1-8621-e5cadd57b82c.JPG">
+</p>
 
 As opgg uses Javascript to display information from the Riot API, it requires the use of Javascript to be enabed. This meant that Beautiful Soup would not work, therefore, Selenium was used alongside ChromeDriver. The UI for op.gg's Live Game looks like this: 
 
-![Screenshot 2022-12-16 at 12 13 13](https://user-images.githubusercontent.com/80691974/208096006-287f7a3e-acf2-4d79-bf9e-a2f94f2467d2.JPG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208096006-287f7a3e-acf2-4d79-bf9e-a2f94f2467d2.JPG">
+</p>
 
 Discord's embedded messages have a limit of only displaying 3 rows, therefore, only 3 sets of information could be included. This is fine, as the useful information that is needed are: Champion (character) name, rank, win rate.
 
@@ -78,17 +85,24 @@ Discord's embedded messages have a limit of only displaying 3 rows, therefore, o
 
 This below is the hourly weather update. It can also be called manually with the `!weather` command with the location also entered.
 
-![Screenshot 2022-12-16 at 11 37 32](https://user-images.githubusercontent.com/80691974/208090106-aa67e793-48e0-4b29-8325-60a34a09cb79.JPG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208090106-aa67e793-48e0-4b29-8325-60a34a09cb79.JPG">
+</p>
 
-![Screenshot 2022-12-16 at 11 40 20](https://user-images.githubusercontent.com/80691974/208090697-57ac805c-b9a3-4675-adf7-45fc6e7b72bb.JPG)
-
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208090697-57ac805c-b9a3-4675-adf7-45fc6e7b72bb.JPG">
+</p>
 
 ### Link Shortner
 
 This is available for UK eBay and Amazon links. These websites only need the item number to show the correct listing but there are many occasions where other infomration is added onto the website URL. 
 
-![Screenshot 2022-12-16 at 12 20 10](https://user-images.githubusercontent.com/80691974/208097028-22ee0a97-5b46-4d91-a4a0-26880d1e1095.JPG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208097028-22ee0a97-5b46-4d91-a4a0-26880d1e1095.JPG">
+</p>
 
 The original URL could be something like: 
 
-![Screenshot 2022-12-16 at 12 47 48](https://user-images.githubusercontent.com/80691974/208101547-44e473bf-8c1a-4b99-b484-c8d3f084dc34.JPG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/80691974/208101547-44e473bf-8c1a-4b99-b484-c8d3f084dc34.JPG">
+</p>
