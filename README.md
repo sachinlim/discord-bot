@@ -77,7 +77,5 @@ This is available for UK eBay and Amazon links. These websites only need the ite
 
 ![Screenshot 2022-12-16 at 12 20 10](https://user-images.githubusercontent.com/80691974/208097028-22ee0a97-5b46-4d91-a4a0-26880d1e1095.JPG)
 
-The original URL could be something like: `https://www.ebay.co.uk/itm/334628113776_trkparms=amclksrc%3DITM%26aid%3D777008%26algo%3DPERSONAL.TOPIC%26ao%3D1%26asc%3D20220705 ...`
-
-
-
+The original URL could be something like: 
+![Screenshot 2022-12-16 at 12 47 48](https://user-images.githubusercontent.com/80691974/208101547-44e473bf-8c1a-4b99-b484-c8d3f084dc34.JPG)
