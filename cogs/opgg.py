@@ -76,7 +76,7 @@ class Opgg(commands.Cog):
 
         embed = discord.Embed(
             title="Live Game Match-Up",
-            description=f"From {summoner_name}'s opgg.py.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
+            description=f"From {summoner_name}'s op.gg \n https://www.op.gg/summoners/euw/{formatted}/ingame",
             colour=0xbc8125,
         )
 
