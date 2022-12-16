@@ -51,7 +51,7 @@ In the event that there is a typo in the search term or the item does not exist,
 
 ### op.gg Live Game scraper 
 
-This scraper was made using Selenium to have information scraped. 
+This scraper was made using Selenium to have information scraped. There are two versions of this: one using the command `!ig` which only provides the URL for the specified account name, while `!ig2` provides the scraped information. 
 
 ![Screenshot 2022-12-16 at 12 13 02](https://user-images.githubusercontent.com/80691974/208095857-7d77e066-b103-48f1-8621-e5cadd57b82c.JPG)
 
