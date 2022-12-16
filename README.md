@@ -57,7 +57,7 @@ This is the `!search` command that provides information from [eBay's advance sea
   <img src="https://user-images.githubusercontent.com/80691974/208089922-d21f70c6-e779-4371-9c84-28a00093a3ea.JPG">
 </p>
 
-Sometimes, items are sold in bulk in a single listing, such as "5x Intel i5-7400", meaning the price for the listing is 5 times higher than if it was a single item sold. To avoid abnormalities like these, trimming is done by 15% from the lowest and highest prices, reducing the total list of items down to 70%. 
+Sometimes, items are sold in bulk in a single listing, such as "5x Intel i5-7400", meaning the price for the listing is 5 times higher than if it was a single item sold. To try and avoid abnormalities like these, trimming is done by 15% from the lowest and highest prices, reducing the total list of items down to 70%. This should mean that most of the outliers are removed.
 
 In the event that there is a typo in the search term or the item does not exist, an error message is sent. 
 
