@@ -21,7 +21,7 @@ These features found in the `cogs` directory can be extracted and implemented in
 
 ## Prerequisites
 
-The Bot is created using Python 3.10 and requries a few modules to be installed. 
+The Bot is created using Python 3.10 and requires a few modules to be installed. 
 
 Installing using `pip`
 
@@ -59,7 +59,7 @@ This is the `!search` command that provides information from [eBay's advance sea
 
 Sometimes, items are sold in bulk in a single listing, such as "5x Intel i5-7400", meaning the price for the listing is 5 times higher than if it was a single item sold. To try and avoid abnormalities like these, trimming is done by 15% from the lowest and highest prices, reducing the total list of items down to 70%. This should mean that most of the outliers are removed.
 
-In the event that there is a typo in the search term or the item does not exist, an error message is sent. 
+In the event that there is a typo in the search term or the item does not exist, an error message is sent: 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/80691974/208090929-065cead7-6951-41d9-bf64-3519e189e7c7.JPG">
@@ -73,13 +73,15 @@ This scraper was made using Selenium to have information scraped. There are two 
   <img src="https://user-images.githubusercontent.com/80691974/208095857-7d77e066-b103-48f1-8621-e5cadd57b82c.JPG">
 </p>
 
-As opgg uses Javascript to display information from the Riot API, it requires the use of Javascript to be enabed. This meant that Beautiful Soup would not work, therefore, Selenium was used alongside ChromeDriver. The UI for op.gg's Live Game looks like this: 
+As op.gg uses Javascript to display information from the Riot API, it requires the use of Javascript to be enabed. This meant that Beautiful Soup would not work, therefore, Selenium was used alongside ChromeDriver. 
+
+The UI for op.gg's Live Game looks like this: 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/80691974/208096006-287f7a3e-acf2-4d79-bf9e-a2f94f2467d2.JPG">
 </p>
 
-Discord's embedded messages have a limit of only displaying 3 rows, therefore, only 3 sets of information could be included. This is fine, as the useful information that is needed are: Champion (character) name, rank, win rate.
+Discord's embedded messages have a limit of only displaying 3 rows, therefore, only 3 sets of information could be included. This is fine, as the useful information that is needed are: Champion (character) name, rank, and win rate.
 
 
 ### Weather
@@ -94,9 +96,9 @@ This below is the hourly weather update. It can also be called manually with the
   <img src="https://user-images.githubusercontent.com/80691974/208090697-57ac805c-b9a3-4675-adf7-45fc6e7b72bb.JPG">
 </p>
 
-### Link Shortner
+### Link Shortener
 
-This is available for UK eBay and Amazon links. These websites only need the item number to show the correct listing but there are many occasions where other infomration is added onto the website URL. 
+This is available for UK eBay and Amazon links. These websites only need the item number to show the correct listing but there are many occasions where other information is added onto the website URL. 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/80691974/208097028-22ee0a97-5b46-4d91-a4a0-26880d1e1095.JPG">
