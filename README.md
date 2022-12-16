@@ -22,6 +22,8 @@ this Bot can be found in the [cogs](cogs) directory.
 
 The Bot is created using Python 3.10 and requries a few modules to be installed. 
 
+Installing using `pip`
+
 ```
 # Installing the entire requirements.txt file
 pip install -r requirements.txt
@@ -29,6 +31,16 @@ pip install -r requirements.txt
 # Manual installation of modules
 pip install discord, selenium, requests, beautifulsoup4
 ```
+
+For MacOS, `pip3` might need to be used.
+```
+# Installing the entire requirements.txt file
+pip3 install -r requirements.txt
+
+# Manual installation of modules
+pip3 install discord, selenium, requests, beautifulsoup4
+```
+
 
 In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeDriver](https://chromedriver.chromium.org/downloads) needs to be downloaded and placed in the same directory as the [dukies-bot.py](dukies-bot.py) file.
 
@@ -78,4 +90,5 @@ This is available for UK eBay and Amazon links. These websites only need the ite
 ![Screenshot 2022-12-16 at 12 20 10](https://user-images.githubusercontent.com/80691974/208097028-22ee0a97-5b46-4d91-a4a0-26880d1e1095.JPG)
 
 The original URL could be something like: 
+
 ![Screenshot 2022-12-16 at 12 47 48](https://user-images.githubusercontent.com/80691974/208101547-44e473bf-8c1a-4b99-b484-c8d3f084dc34.JPG)
