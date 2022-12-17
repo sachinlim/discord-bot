@@ -3,12 +3,9 @@
 
 # Discord Bot 
 
-Discord bot designed to keep servers clean with shortening long links and adding commands to help reduce search times.
+Discord bot designed to keep servers clean with shortening long links and adding commands to help reduce search times. 
 
-With how the API works, it allows the ability to store features for the bots in a separate class with the use of the 
-[Discord.py cogs](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html)
- feature. Each feature like commands and event listeners gets their own class to keep code tidy. The features of 
-this Bot can be found in the [cogs](cogs) directory. 
+It is made with [Discord.py](https://discordpy.readthedocs.io/en/stable/) API, and with how the API works, it allows the ability to store features for the bot in a separate class with the use of the [Discord.py cogs](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html) feature. The features of this Bot can be found in the [cogs](cogs) directory. 
 
 ## Key Features
 
