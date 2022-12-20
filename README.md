@@ -30,7 +30,7 @@ pip install -r requirements.txt
 pip install discord, selenium, requests, beautifulsoup4
 ```
 
-For MacOS, `pip3` might need to be used.
+For MacOS, `pip3` might need to be used
 ```
 # Installing the entire requirements.txt file
 pip3 install -r requirements.txt
