@@ -14,7 +14,8 @@ It is made with [Discord.py](https://discordpy.readthedocs.io/en/stable/) API, a
 * Weather updates
 * Link shortener for eBay and Amazon
 
-These features found in the [cogs](cogs) directory can be extracted and implemented in another Python script as long as the relevant modules are installed. For example, the [eBay scraper](cogs/eBay.py) is a variant of the [ebay-sold-prices](https://github.com/sachinlim/ebay-sold-prices) project. 
+These features found in the [cogs](cogs) directory can be extracted and implemented in another Python script as long as the relevant modules are installed. For example, the [eBay scraper](#ebay-scraper) is a variant of the [ebay-sold-prices](https://github.com/sachinlim/ebay-sold-prices) project. 
+
 
 ## Prerequisites
 
