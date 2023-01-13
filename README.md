@@ -101,13 +101,13 @@ This below is the hourly weather update. It can also be called manually with the
 This is available for UK eBay and Amazon links. These websites only need the item number to show the correct listing but there are many occasions where other information is added onto the website URL. 
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/80691974/211800087-980c5d9c-2c64-45c7-a243-07dcb718bba6.png">
+  <img src="https://user-images.githubusercontent.com/80691974/212424494-8d10f5f4-37f8-4580-9647-a8f34bb7a91b.png" width="650">
 </p>
 
 
 The original URL could be something like: 
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/80691974/211800299-e6e37976-3e7c-460c-8311-de2f80e92f80.png">
+  <img src="https://user-images.githubusercontent.com/80691974/212424589-70798d6d-2de6-4583-a8a4-ab3c58e31123.png" width="650">
 </p>
 
