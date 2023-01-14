@@ -33,7 +33,7 @@ pip install -r requirements.txt
 pip install discord, selenium, requests, beautifulsoup4
 ```
 
-In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeDriver](https://chromedriver.chromium.org/downloads) needs to be downloaded and placed in the same directory as the [dukies-bot.py](dukies-bot.py) file. There should be another file called `passives.py`, where the bot can get private variables from, such as the token ID for the bot or the channel IDs for the hourly weather updates.
+In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeDriver](https://chromedriver.chromium.org/downloads) needs to be downloaded and placed in the same directory as the [dukies-bot.py](dukies-bot.py) file. There should be another file called `actives.py`, where the bot can get private variables from, such as the token ID for the bot or the channel IDs for the hourly weather updates.
 
 
 ## Screenshots
