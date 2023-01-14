@@ -33,16 +33,6 @@ pip install -r requirements.txt
 pip install discord, selenium, requests, beautifulsoup4
 ```
 
-For MacOS, `pip3` might need to be used
-```
-# Installing the entire requirements.txt file
-pip3 install -r requirements.txt
-
-# Manual installation of modules
-pip3 install discord, selenium, requests, beautifulsoup4
-```
-
-
 In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeDriver](https://chromedriver.chromium.org/downloads) needs to be downloaded and placed in the same directory as the [dukies-bot.py](dukies-bot.py) file.
 
 
