@@ -7,7 +7,12 @@ class LinkShortener(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def on_message(self, message):
-        # Shortens website links from eBay and Amazon before deleting the long link
+        """
+        Shortens website links from eBay and Amazon before deleting the long link
+
+        :param message: messages that the bot is listening for
+        :return: shortened link
+        """
         if message.content.startswith('https://www.ebay.co.uk/itm/'):
             if "?" in message.content:
                 new_link = message.content.split("?")[0]

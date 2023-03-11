@@ -14,6 +14,10 @@ class Weather(commands.Cog):
         """
         Country could also be provided, as a city name can exist in both UK and US
         For example, London exists in Ohio, USA as well
+        Default value for country is assumed to be GB (UK) if none is provided
+
+        :param city: name of the city being passed from Discord by the user
+        :return: city and country name
         """
         user_input = city.title()
 
@@ -31,6 +35,10 @@ class Weather(commands.Cog):
     def get_url(self, city, country):
         """
         Calling and formatting the url link for the API
+
+        :param city: city
+        :param country: country of the city being provided
+        :return: URL link with the correct city and country included
         """
         api_key = actives.weather_api
         units = 'metric'
@@ -42,6 +50,9 @@ class Weather(commands.Cog):
     def convert_ms_to_mph(self, value):
         """
         This is used to convert m/s to mph for the wind speed
+
+        :param value: value obtained from the API request that needs to be converted to mph
+        :return: converted value of wind speed in mph
         """
         formula = 2.236936
         ms_to_mph = value * formula
@@ -52,6 +63,9 @@ class Weather(commands.Cog):
         """
         Weather conditions to display as thumbnail
         There are different conditions that have their own separate icons with links provided by OpenWeatherMap
+
+        :param weather_id: type of weather condition obtained from the API request
+        :return: URL to the icon associated with the weather condition
         """
         match weather_id:
             case 'Thunderstorm':
@@ -87,6 +101,9 @@ class Weather(commands.Cog):
         """
         Providing the colour hex values for the embedded message
         Colour depends on the temperature of the location
+
+        :param number: temperature in degrees Celsius
+        :return: colour indicating the temperature
         """
         if number <= 0:
             return 0xa9d6ea
@@ -104,6 +121,9 @@ class Weather(commands.Cog):
     def assign_variables(self, city):
         """
         Assigns variables that can be used to create the embed message for the specified city
+
+        :param city: name of the city being passed from Discord by the user
+        :return: formatted values obtained by the API request, relevant ones being returned as a variable
         """
         city_name, country_code = self.get_location(city)
 

@@ -15,6 +15,13 @@ class Admin(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        """
+        Error handler when the user does not pass along a search term with the command
+
+        :param ctx: the message sent by the user
+        :param error: error name
+        :return: message to inform user to enter a search term
+        """
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('Please enter the search term!')
 

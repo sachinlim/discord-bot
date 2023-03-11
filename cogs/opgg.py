@@ -10,7 +10,12 @@ class Opgg(commands.Cog):
         self.bot = bot
 
     def op_format(self, summoner_name):
-        # op.gg replaces blank spaces with "%20"
+        """
+        op.gg replaces blank spaces with "%20"
+
+        :param summoner_name: name of a player being passed onto the bot by the user
+        :return: formatted name with "%20" being used to replace spaces
+        """
         formatted = summoner_name
         if " " in summoner_name:
             formatted = summoner_name.replace(' ', '%20')
@@ -21,6 +26,10 @@ class Opgg(commands.Cog):
         """
         Scraping data from op.gg live game viewer
         The player must be in a spectate-able game to be able to view this information
+        The name of the champion the players are playing is obtained, rather than providing the player's username
+
+        :param summoner_name: name of a player being passed onto the bot by the user
+        :return: a list containing the champion's name, current rank and win rate for all 10 players
         """
         url = f'https://www.op.gg/summoners/euw/{summoner_name}/ingame'
 
@@ -53,13 +62,25 @@ class Opgg(commands.Cog):
 
     @commands.command()
     async def op(self, ctx, *, summoner_name):
-        # op.gg profile for summoner name entered after command
+        """
+        op.gg profile for summoner name entered after command
+
+        :param ctx: value being passed on by the user
+        :param summoner_name: name of the player to search for
+        :return: URL link to user profile on op.gg with the player's name
+        """
         formatted = self.op_format(summoner_name)
         await ctx.send(f'https://www.op.gg/summoners/euw/{formatted}')
 
     @commands.command()
     async def ig(self, ctx, *, summoner_name):
-        # Link to op.gg live game webpage for specified summoner name
+        """
+        Link to op.gg live game webpage for specified summoner name
+
+        :param ctx: value being passed on by the user
+        :param summoner_name: name of the player to search for
+        :return: URL link to an active game that can provide a detailed view about the current matchups
+        """
         if " " in summoner_name:
             formatted = self.op_format(summoner_name)
             await ctx.send(f'https://www.op.gg/summoners/euw/{formatted}/ingame')
@@ -71,6 +92,10 @@ class Opgg(commands.Cog):
         """
         Scraping live game information from the website available on op.gg
         Sends out an embedded message to show match-up without having to go to the link provided in ig()
+
+        :param ctx: value being passed on by the user
+        :param summoner_name: name of the player to search for
+        :return: embedded message with 3 fields that display relevant information about the game the player is in
         """
         formatted = self.op_format(summoner_name)
 
