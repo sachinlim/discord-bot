@@ -7,6 +7,10 @@ Discord bot designed to keep servers clean with shortening long links and adding
 
 It is made with [Discord.py](https://discordpy.readthedocs.io/en/stable/) API wrapper, and with how the API wrapper works, it allows the ability to store features for the bot in a separate class with the use of the [Discord.py cogs](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html) feature. The features of this Bot can be found in the [cogs](cogs) directory. 
 
+### Additional Bots
+
+As this was the first venture with creating bots, other Discord bots have also been created, which adopt certain [cogs](cogs) and include new ones. The other bots seeing the most use is the [hwsuk-bot](https://github.com/sachinlim/hwsuk-bot), which was created for a community of 19,000 hardware traders on Reddit, located in the UK. The bot is available to a growing community of 2000 users that are involved in the community's Discord server.   
+
 ## Key Features
 
 * [eBay](https://www.ebay.co.uk/) sold price scraper for used items
@@ -14,10 +18,7 @@ It is made with [Discord.py](https://discordpy.readthedocs.io/en/stable/) API wr
 * Weather updates
 * Link shortener for eBay and Amazon
 
-These features found in the [cogs](cogs) directory can be extracted and implemented in another Python script as long as the relevant modules are installed. 
-
-For example, the [eBay scraper](#ebay-scraper) is a variant of the [ebay-sold-prices](https://github.com/sachinlim/ebay-sold-prices) project, and has been implemented in the [hwsuk-bot](https://github.com/sachinlim/hwsuk-bot) project for a community of hardware traders in the UK. 
-
+These features found in the [cogs](cogs) directory can be extracted and implemented as a standalone Python script, as long as the relevant modules are installed. This allows for the use of Discord bots to act as a wrapper that impements many projects as commands.
 
 ## Prerequisites
 
