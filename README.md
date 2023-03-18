@@ -3,7 +3,7 @@
 
 # Discord Bot 
 
-Discord bot designed to keep servers clean with shortening long links and adding commands to help reduce search times. 
+Discord bot designed to keep servers clean with shortening long links and adding commands to help reduce search times.
 
 It is made with [Discord.py](https://discordpy.readthedocs.io/en/stable/) API wrapper, and with how the API wrapper works, it allows the ability to store features for the bot in a separate class with the use of the [Discord.py cogs](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html) feature. The features of this Bot can be found in the [cogs](cogs) directory. 
 
@@ -31,11 +31,20 @@ Installing using `pip`
 pip install -r requirements.txt
 
 # Manual installation of modules
-pip install discord, selenium, requests, beautifulsoup4
+pip install discord selenium requests beautifulsoup4
 ```
 
 In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeDriver](https://chromedriver.chromium.org/downloads) needs to be downloaded and placed in the same directory as the [dukies-bot.py](dukies-bot.py) file. There should be another file called `actives.py`, where the bot can get private variables from, such as the token ID for the bot or the channel IDs for the hourly weather updates.
 
+### Staying online
+
+To host this on DigitalOcean (or any cloud provider), GNU screen has been used to always keep the bot online. If you run the bot script with `python3 dukies-bot.py`, it will no longer be online after you close the console/terminal. To do this, screen can bse used.
+
+* install screen `pip install screen`
+* write `screen` to open it up
+* read the message and press enter
+* navigate to your script and run it with `python3 dukies-bot.py`
+* close the window or exit screen with `[CTRL] + A + D`
 
 ## Screenshots
 
