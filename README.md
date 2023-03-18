@@ -38,13 +38,16 @@ In order for the [op.gg](https://www.op.gg/) Live Game scraper to work, [ChromeD
 
 ### Staying online
 
-To host this on DigitalOcean (or any cloud provider), GNU screen has been used to always keep the bot online. If you run the bot script with `python3 dukies-bot.py`, it will no longer be online after you close the console/terminal. To do this, screen can bse used.
+To host this on DigitalOcean (or any cloud provider), GNU screen has been used to always keep the bot online. If you run the bot script with `python3 dukies-bot.py`, it will no longer be online after you close the console/terminal. To prevent this and always stay online, screen can be used.
 
 * install screen `pip install screen`
 * write `screen` to open it up
 * read the message and press enter
 * navigate to your script and run it with `python3 dukies-bot.py`
 * close the window or exit screen with `[CTRL] + A + D`
+
+One thing I discovered was that the basic Droplet on DigitalOcean was not good enough for [hwsuk-bot](https://github.com/sachinlim/hwsuk-bot) because the screen instance would kill itself after a few days. After looking at the activity history on DigitalOcean, there were random CPU spikes, over 70% memory utilisation, and high disk usage. This made me upgrade one tier up, to a Droplet with 1GB RAM but still with one CPU core. There have been no issues so far.
+
 
 ## Screenshots
 
